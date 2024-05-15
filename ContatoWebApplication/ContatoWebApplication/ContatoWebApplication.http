@@ -1,6 +1,0 @@
-@ContatoWebApplication_HostAddress = http://localhost:5064
-
-GET {{ContatoWebApplication_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

@@ -14,13 +14,13 @@ namespace ContatoDomain.Entity
         public int id { get; set; }
         public string nome { get; set; }
         public string empresa { get; set; }
-        public List<Email> listaEmails { get; set; }
+        public ICollection<Email> listaEmails { get; set; }
         public string telefonePessoal { get; set; }
         public string telefoneComercial { get; set; }
 
         public Contato()
         {
-
+            listaEmails = new List<Email>();    
         }
 
     }

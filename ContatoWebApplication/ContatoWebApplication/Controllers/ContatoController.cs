@@ -53,7 +53,14 @@ namespace ContatoWebApplication.Controllers
             return contato;
         }
 
+        /// <summary>
+        /// Retorna um contato com o nome especificado.
+        /// </summary>
+        /// <param name="id">O nome do contato a ser retornado.</param>
+        /// <returns>O contato correspondente ao nome fornecido.</returns>
+        /// <response code="200">O contato foi encontrado e retornado com sucesso.</response>
         [HttpGet("FiltrarPorNome")]
+        [ProducesResponseType(200)]
         public async Task<ActionResult<IEnumerable<Contato>>> FiltrarPorNome(string nome)
         {
             return await _context.Contato
@@ -62,7 +69,14 @@ namespace ContatoWebApplication.Controllers
                 .ToListAsync();
         }
 
+        /// <summary>
+        /// Retorna um contato com a empresa especificada.
+        /// </summary>
+        /// <param name="id">A empresa do contato a ser retornado.</param>
+        /// <returns>O contato correspondente à empresa fornecida.</returns>
+        /// <response code="200">O contato foi encontrado e retornado com sucesso.</response>
         [HttpGet("FiltrarPorEmpresa")]
+        [ProducesResponseType(200)]
         public async Task<ActionResult<IEnumerable<Contato>>> FiltarPorEmpresa(string empresa)
         {
             return await _context.Contato
@@ -71,7 +85,14 @@ namespace ContatoWebApplication.Controllers
                 .ToListAsync();
         }
 
+        /// <summary>
+        /// Retorna um contato com o telefone pessoal especificado.
+        /// </summary>
+        /// <param name="id">O telefone pessoal do contato a ser retornado.</param>
+        /// <returns>O contato correspondente ao telefone fornecido.</returns>
+        /// <response code="200">O contato foi encontrado e retornado com sucesso.</response>
         [HttpGet("FiltrarPorTelefonePessoal")]
+        [ProducesResponseType(200)]
         public async Task<ActionResult<IEnumerable<Contato>>> FiltrarPorTelefonePessoal(string telefonePessoal)
         {
             return await _context.Contato
@@ -80,7 +101,14 @@ namespace ContatoWebApplication.Controllers
                 .ToListAsync();
         }
 
+        /// <summary>
+        /// Retorna um contato com o telefone comercial especificado.
+        /// </summary>
+        /// <param name="id">O telefone comercial do contato a ser retornado.</param>
+        /// <returns>O contato correspondente ao telefone fornecido.</returns>
+        /// <response code="200">O contato foi encontrado e retornado com sucesso.</response>
         [HttpGet("FiltrarPorTelefoneComercial")]
+        [ProducesResponseType(200)]
         public async Task<ActionResult<IEnumerable<Contato>>> FiltrarPorTelefoneComercial(string telefoneComercial)
         {
             return await _context.Contato
@@ -89,7 +117,14 @@ namespace ContatoWebApplication.Controllers
                 .ToListAsync();
         }
 
+        /// <summary>
+        /// Retorna um contato com o email especificado.
+        /// </summary>
+        /// <param name="id">O email do contato a ser retornado.</param>
+        /// <returns>O contato correspondente ao email fornecido.</returns>
+        /// <response code="200">O contato foi encontrado e retornado com sucesso.</response>
         [HttpGet("FiltrarPorEmail")]
+        [ProducesResponseType(200)]
         public async Task<ActionResult<IEnumerable<Contato>>> FiltrarPorEmail(string email)
         {
             return await _context.Contato

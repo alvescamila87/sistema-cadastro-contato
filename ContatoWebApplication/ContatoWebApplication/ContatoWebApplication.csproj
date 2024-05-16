@@ -6,7 +6,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
 	  <DocumentationFile>path/to/file.xml</DocumentationFile>
 	<GenerateDocumentationFile>true</GenerateDocumentationFile>
-	<DocumentationFile></DocumentationFile>
+	<DocumentationFile>obj\Debug\net8.0\ContatoWebApplication.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

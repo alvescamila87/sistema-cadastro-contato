@@ -1,25 +1,32 @@
 using ContatoWebApplication.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Services.AddControllers();
+
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseInMemoryDatabase(builder.Configuration.GetConnectionString("ContatoDB")));
 
 builder.Services.AddControllers();
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-// Configuração de banco em memória
-builder.Services.AddDbContext<AppDbContext>(options => 
-options.UseInMemoryDatabase(builder.Configuration.GetConnectionString("ContatoDB"))
-);
-
 // Configuração de Cors 
-#region [Cors]
-builder.Services.AddCors();
-#endregion
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAnyOrigin",
+        builder => builder
+            .AllowAnyOrigin()
+            .AllowAnyMethod()
+            .AllowAnyHeader());
+});
+
+// Configuração do Swagger
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "ContatoWebApplication", Version = "v1" });
+});
 
 var app = builder.Build();
 
@@ -27,20 +34,18 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
-    app.UseSwaggerUI();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "ContatoWebApplication V1");
+    });
+    app.UseDeveloperExceptionPage();
 }
 
 app.UseHttpsRedirection();
 
-#region [Cors]
-app.UseCors(c =>
-{
-    c.AllowAnyHeader();
-    c.AllowAnyMethod();
-    c.AllowAnyOrigin();
+app.UseRouting();
 
-});
-#endregion
+app.UseCors("AllowAnyOrigin"); // Aplicando a política CORS
 
 app.UseAuthorization();
 

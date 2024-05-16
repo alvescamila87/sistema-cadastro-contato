@@ -10,6 +10,7 @@ namespace ContatoDomain.Models
 {
     public class ContatoDTORequest
     {
+        [Required(ErrorMessage = "O campo Nome é obrigatório.")]
         public string Nome { get; set; }
         public string Empresa { get; set; }
         public ICollection<Email> ListaEmails { get; set; }

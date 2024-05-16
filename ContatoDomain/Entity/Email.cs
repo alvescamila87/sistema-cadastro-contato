@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -11,8 +12,8 @@ namespace ContatoDomain.Entity
     /// </summary>
     public class Email
     {
-        public int Id { get; set; }
-        public Contato contato { get; set; }
+        [Key]
+        public int id { get; set; }
         public string enderecoEmail { get; set; }
 
         public Email()

@@ -13,16 +13,22 @@ namespace ContatoDomain.Entity
     public class Contato
     {
         [Key]
-        public int id { get; set; }
-        public string nome { get; set; }
-        public string empresa { get; set; }
-        public ICollection<Email> listaEmails { get; set; }
-        public string telefonePessoal { get; set; }
-        public string telefoneComercial { get; set; }
+        public int Id { get; set; }
+        public string Nome { get; set; }
+        public string Empresa { get; set; }
+        public ICollection<Email> ListaEmails { get; set; }
+        public string TelefonePessoal { get; set; }
+        public string TelefoneComercial { get; set; }
 
         public Contato()
         {
-            listaEmails = new List<Email>();    
+            ListaEmails = new List<Email>();    
+        }
+
+        public void AdicionarEmail(Email email)
+        {
+            email.ContatoId = this.Id; // Atribui automaticamente o ID do contato ao email
+            ListaEmails.Add(email);
         }
 
     }

@@ -7,20 +7,23 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ContatoDomain.Entity;
 using ContatoWebApplication.Data;
+using ContatoDomain.Models;
+using AutoMapper;
 
 namespace ContatoWebApplication.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
     public class ContatoController(AppDbContext _context) : ControllerBase
-    {                       
+    {
+
         // GET: api/Contato
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Contato>>> GetContato()
         {
             return await _context.Contato
-                .OrderBy(contato => contato.nome) // ordernar os contatos por nome
-                .Include(contato => contato.listaEmails) // listar os e-mails do contato na consulta
+                .OrderBy(contato => contato.Nome) // ordernar os contatos por nome
+                .Include(contato => contato.ListaEmails) // listar os e-mails do contato na consulta
                 .ToListAsync();
         }
 
@@ -29,8 +32,8 @@ namespace ContatoWebApplication.Controllers
         public async Task<ActionResult<Contato>> GetContato(int id)
         {
             var contato = await _context.Contato
-                .Include(contato => contato.listaEmails) // listar os e-mails do contato na consulta
-                .FirstOrDefaultAsync(contato => contato.id == id);
+                .Include(contato => contato.ListaEmails) // listar os e-mails do contato na consulta
+                .FirstOrDefaultAsync(contato => contato.Id == id);
 
             if (contato == null)
             {
@@ -44,15 +47,15 @@ namespace ContatoWebApplication.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutContato(int id, Contato contato)
         {
-            if (id != contato.id)
+            if (id != contato.Id)
             {
                 return BadRequest();
             }
 
             // Carrega o contato e a lista de e-mails
             var contatoParaAtualizar = await _context.Contato
-                .Include(contato => contato.listaEmails)
-                .FirstOrDefaultAsync(contato => contato.id == id);
+                .Include(contato => contato.ListaEmails)
+                .FirstOrDefaultAsync(contato => contato.Id == id);
 
             if(contatoParaAtualizar == null)
             {
@@ -60,29 +63,29 @@ namespace ContatoWebApplication.Controllers
             }
 
             // Atualiza os campos do cadastro de contato apenas
-            contatoParaAtualizar.nome = contato.nome;
-            contatoParaAtualizar.empresa = contato.empresa;
-            contatoParaAtualizar.telefonePessoal = contato.telefonePessoal;
-            contatoParaAtualizar.telefoneComercial = contato.telefoneComercial;
+            contatoParaAtualizar.Nome = contato.Nome;
+            contatoParaAtualizar.Empresa = contato.Empresa;
+            contatoParaAtualizar.TelefonePessoal = contato.TelefonePessoal;
+            contatoParaAtualizar.TelefoneComercial = contato.TelefoneComercial;
 
             // Atualiza os e-mails existentes e adiciona novos
-            foreach(var email in contato.listaEmails)
+            foreach(var email in contato.ListaEmails)
             {
-                var emailExistente = contatoParaAtualizar.listaEmails.FirstOrDefault(e => e.id == email.id);
+                var emailExistente = contatoParaAtualizar.ListaEmails.FirstOrDefault(e => e.Id == email.Id);
                 if(emailExistente != null)
                 {
                     // Se o e-mail já existir, atualize
-                    emailExistente.enderecoEmail = email.enderecoEmail;
+                    emailExistente.EnderecoEmail = email.EnderecoEmail;
                 } else
                 {
                     // Se o e-mail NÃO já existir, adicione
-                    contatoParaAtualizar.listaEmails.Add(email);
+                    contatoParaAtualizar.ListaEmails.Add(email);
                 }
             }
                       
 
             // Atualiza o contato no banco de dados
-            _context.Entry(contato).State = EntityState.Modified;
+            _context.Entry(contatoParaAtualizar).State = EntityState.Modified;
 
             try
             {
@@ -104,14 +107,36 @@ namespace ContatoWebApplication.Controllers
         }
 
         // POST: api/Contato
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Contato>> PostContato(Contato contato)
+        public async Task<ActionResult<Contato>> PostContato(ContatoDTORequest contatoRequest)
         {
-            _context.Contato.Add(contato);
+
+            var novoContato = new Contato()
+            {
+                Nome = contatoRequest.Nome,
+                Empresa = contatoRequest.Empresa,
+                TelefonePessoal = contatoRequest.TelefonePessoal,
+                TelefoneComercial = contatoRequest.TelefoneComercial,
+            };
+
+            var listaEmails = new List<Email>();
+
+                foreach (var emailDTO in contatoRequest.ListaEmails)
+                {
+                    var novoEmail = new Email
+                    {
+                        EnderecoEmail = emailDTO.EnderecoEmail,
+                        ContatoId = novoContato.Id, // Associar o email ao novo contato
+                    };
+
+                    novoContato.ListaEmails.Add(novoEmail);
+                }
+            
+
+            _context.Contato.Add(novoContato);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetContato", new { id = contato.id }, contato);
+            return CreatedAtAction("GetContato", new { id = novoContato.Id }, novoContato);
         }
 
         // DELETE: api/Contato/5
@@ -132,7 +157,7 @@ namespace ContatoWebApplication.Controllers
 
         private bool ContatoExists(int id)
         {
-            return _context.Contato.Any(e => e.id == id);
+            return _context.Contato.Any(e => e.Id == id);
         }
     }
 }

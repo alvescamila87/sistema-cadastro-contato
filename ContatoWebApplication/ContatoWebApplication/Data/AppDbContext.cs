@@ -20,10 +20,10 @@ namespace ContatoWebApplication.Data
             base.OnModelCreating(modelBuilder);
 
             // Configurando a chave primária para a classe Contato
-            modelBuilder.Entity<Contato>().HasKey(contato => contato.id);
+            modelBuilder.Entity<Contato>().HasKey(contato => contato.Id);
 
             // Configurando a chave primária para a classe Email
-            modelBuilder.Entity<Email>().HasKey(emailContato => emailContato.id);
+            modelBuilder.Entity<Email>().HasKey(emailContato => emailContato.Id);
         }
     }
 }

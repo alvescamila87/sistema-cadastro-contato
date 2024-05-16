@@ -1,4 +1,5 @@
-﻿using System.Configuration;
+﻿using AutoMapper;
+using System.Configuration;
 
 namespace ContatoWebApplication.ConfigCors
 {
@@ -32,6 +33,9 @@ namespace ContatoWebApplication.ConfigCors
             {
                 c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "Your API", Version = "v1" });
             });
+
+            // Configura o automapper devido à lista e-mails x DTO
+            // services.AddAutoMapper(typeof(Startup));
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

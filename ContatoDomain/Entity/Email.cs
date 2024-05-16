@@ -13,8 +13,13 @@ namespace ContatoDomain.Entity
     public class Email
     {
         [Key]
-        public int id { get; set; }
-        public string enderecoEmail { get; set; }
+        public int Id { get; set; }
+        public string EnderecoEmail { get; set; }
+
+        #region [Associações do Contato aos seus e-mails]
+        public int ContatoId { get; set; }
+        //public Contato Contato { get; set; }
+        #endregion
 
         public Email()
         {

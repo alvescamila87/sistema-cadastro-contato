@@ -29,6 +29,7 @@ Necessário informar o ID do contato que deseja deletar.
 * C#
 * ASP.NET MVC,
 * Banco de dados em memória
+* Swagger (geração de documentação de API)
 
 ### Autor
 

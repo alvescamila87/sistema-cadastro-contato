@@ -18,7 +18,6 @@ namespace ContatoDomain.Entity
 
         #region [Associações do Contato aos seus e-mails]
         public int ContatoId { get; set; }
-        //public Contato Contato { get; set; }
         #endregion
 
         public Email()

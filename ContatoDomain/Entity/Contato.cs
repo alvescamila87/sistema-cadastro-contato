@@ -14,6 +14,8 @@ namespace ContatoDomain.Entity
     {
         [Key]
         public int Id { get; set; }
+        
+        [Required(ErrorMessage = "O campo Nome é obrigatório.")]
         public string Nome { get; set; }
         public string Empresa { get; set; }
         public ICollection<Email> ListaEmails { get; set; }
@@ -22,12 +24,16 @@ namespace ContatoDomain.Entity
 
         public Contato()
         {
-            ListaEmails = new List<Email>();    
+            ListaEmails = new List<Email>();
         }
 
+        /// <summary>
+        /// Atribui automaticamente o ID do contato ao email
+        /// </summary>
+        /// <param name="email">Recebe o e-mail do contato para atribuir o id</param>
         public void AdicionarEmail(Email email)
         {
-            email.ContatoId = this.Id; // Atribui automaticamente o ID do contato ao email
+            email.ContatoId = this.Id; 
             ListaEmails.Add(email);
         }
 

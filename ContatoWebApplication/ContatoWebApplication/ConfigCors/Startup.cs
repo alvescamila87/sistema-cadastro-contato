@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using System.Configuration;
+﻿using System.Configuration;
 
 namespace ContatoWebApplication.ConfigCors
 {
@@ -31,11 +30,9 @@ namespace ContatoWebApplication.ConfigCors
             // Configuração do Swagger
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "Your API", Version = "v1" });
+                c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo { Title = "ContatoWebApplication", Version = "v1" });
             });
 
-            // Configura o automapper devido à lista e-mails x DTO
-            // services.AddAutoMapper(typeof(Startup));
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -63,7 +60,7 @@ namespace ContatoWebApplication.ConfigCors
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Your API V1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "ContatoWebApplication V1");
             });
         }
     }

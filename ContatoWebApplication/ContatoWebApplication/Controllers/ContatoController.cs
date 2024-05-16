@@ -8,7 +8,6 @@ using Microsoft.EntityFrameworkCore;
 using ContatoDomain.Entity;
 using ContatoWebApplication.Data;
 using ContatoDomain.Models;
-using AutoMapper;
 
 namespace ContatoWebApplication.Controllers
 {
@@ -16,9 +15,12 @@ namespace ContatoWebApplication.Controllers
     [ApiController]
     public class ContatoController(AppDbContext _context) : ControllerBase
     {
-
-        // GET: api/Contato
+        /// <summary>
+        /// Retorna todos os contatos cadastrados
+        /// </summary>
+        /// <returns>Uma lista de contatos.</returns>
         [HttpGet]
+        [ProducesResponseType(200)]
         public async Task<ActionResult<IEnumerable<Contato>>> GetContato()
         {
             return await _context.Contato
@@ -27,8 +29,16 @@ namespace ContatoWebApplication.Controllers
                 .ToListAsync();
         }
 
-        // GET: api/Contato/5
+        /// <summary>
+        /// Retorna um contato com o ID especificado.
+        /// </summary>
+        /// <param name="id">O ID do contato a ser retornado.</param>
+        /// <returns>O contato correspondente ao ID fornecido.</returns>
+        /// <response code="200">O contato foi encontrado e retornado com sucesso.</response>
+        /// <response code="404">O contato com o ID fornecido não foi encontrado.</response>
         [HttpGet("{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
         public async Task<ActionResult<Contato>> GetContato(int id)
         {
             var contato = await _context.Contato
@@ -43,8 +53,101 @@ namespace ContatoWebApplication.Controllers
             return contato;
         }
 
-        // PUT: api/Contato/5
+        [HttpGet("FiltrarPorNome")]
+        public async Task<ActionResult<IEnumerable<Contato>>> FiltrarPorNome(string nome)
+        {
+            return await _context.Contato
+                .Where(contato => contato.Nome.Contains(nome))
+                .Include(contato => contato.ListaEmails)
+                .ToListAsync();
+        }
+
+        [HttpGet("FiltrarPorEmpresa")]
+        public async Task<ActionResult<IEnumerable<Contato>>> FiltarPorEmpresa(string empresa)
+        {
+            return await _context.Contato
+                .Where(contato => contato.Empresa.Contains(empresa))
+                .Include(contato => contato.ListaEmails)
+                .ToListAsync();
+        }
+
+        [HttpGet("FiltrarPorTelefonePessoal")]
+        public async Task<ActionResult<IEnumerable<Contato>>> FiltrarPorTelefonePessoal(string telefonePessoal)
+        {
+            return await _context.Contato
+                .Where(contato => contato.TelefonePessoal.Contains(telefonePessoal))
+                .Include(contato => contato.ListaEmails)
+                .ToListAsync();
+        }
+
+        [HttpGet("FiltrarPorTelefoneComercial")]
+        public async Task<ActionResult<IEnumerable<Contato>>> FiltrarPorTelefoneComercial(string telefoneComercial)
+        {
+            return await _context.Contato
+                .Where(contato => contato.TelefoneComercial.Contains(telefoneComercial))
+                .Include(contato => contato.ListaEmails)
+                .ToListAsync();
+        }
+
+        [HttpGet("FiltrarPorEmail")]
+        public async Task<ActionResult<IEnumerable<Contato>>> FiltrarPorEmail(string email)
+        {
+            return await _context.Contato
+                .Where(contato => contato.ListaEmails.Any(e => e.EnderecoEmail == email))
+                .Include(contato => contato.ListaEmails)
+                .ToListAsync();
+        }
+
+        /// <summary>
+        /// Adiciona um novo contato.
+        /// </summary>
+        /// <param name="contatoRequest">O novo contato a ser adicionado.</param>
+        /// <returns>O novo contato adicionado.</returns>
+        /// <response code="201">O contato foi adicionado com sucesso.</response>
+        [HttpPost]
+        [ProducesResponseType(201)]
+        public async Task<ActionResult<Contato>> PostContato(ContatoDTORequest contatoRequest)
+        {
+
+            var novoContato = new Contato()
+            {
+                Nome = contatoRequest.Nome,
+                Empresa = contatoRequest.Empresa,
+                TelefonePessoal = contatoRequest.TelefonePessoal,
+                TelefoneComercial = contatoRequest.TelefoneComercial,
+            };
+
+            var listaEmails = new List<Email>();
+
+            foreach (var emailDTO in contatoRequest.ListaEmails)
+            {
+                var novoEmail = new Email
+                {
+                    EnderecoEmail = emailDTO.EnderecoEmail,
+                    ContatoId = novoContato.Id, // Associar o email ao novo contato
+                };
+
+                novoContato.ListaEmails.Add(novoEmail);
+            }
+
+
+            _context.Contato.Add(novoContato);
+            await _context.SaveChangesAsync();
+
+            return CreatedAtAction("GetContato", new { id = novoContato.Id }, novoContato);
+        }
+
+        /// <summary>
+        /// Atualiza um contato com o ID especificado.
+        /// </summary>
+        /// <param name="id">O ID do contato a ser atualizado.</param>
+        /// <param name="contato">O novo de nome, empresa, lista de emails, telefone pessoal e/ou comercial do contato.</param>
+        /// <returns>O contato atualizado.</returns>
+        /// <response code="200">O contato foi atualizado com sucesso.</response>
+        /// <response code="404">O contato com o ID fornecido não foi encontrado.</response>
         [HttpPut("{id}")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(404)]
         public async Task<IActionResult> PutContato(int id, Contato contato)
         {
             if (id != contato.Id)
@@ -59,7 +162,7 @@ namespace ContatoWebApplication.Controllers
 
             if(contatoParaAtualizar == null)
             {
-                return NotFound();
+                return NotFound("Contato não encontrado pelo ID: " + id + ". Tente novamente.");
             }
 
             // Atualiza os campos do cadastro de contato apenas
@@ -104,43 +207,18 @@ namespace ContatoWebApplication.Controllers
             }
 
             return NoContent();
-        }
+        }               
 
-        // POST: api/Contato
-        [HttpPost]
-        public async Task<ActionResult<Contato>> PostContato(ContatoDTORequest contatoRequest)
-        {
-
-            var novoContato = new Contato()
-            {
-                Nome = contatoRequest.Nome,
-                Empresa = contatoRequest.Empresa,
-                TelefonePessoal = contatoRequest.TelefonePessoal,
-                TelefoneComercial = contatoRequest.TelefoneComercial,
-            };
-
-            var listaEmails = new List<Email>();
-
-                foreach (var emailDTO in contatoRequest.ListaEmails)
-                {
-                    var novoEmail = new Email
-                    {
-                        EnderecoEmail = emailDTO.EnderecoEmail,
-                        ContatoId = novoContato.Id, // Associar o email ao novo contato
-                    };
-
-                    novoContato.ListaEmails.Add(novoEmail);
-                }
-            
-
-            _context.Contato.Add(novoContato);
-            await _context.SaveChangesAsync();
-
-            return CreatedAtAction("GetContato", new { id = novoContato.Id }, novoContato);
-        }
-
-        // DELETE: api/Contato/5
+        /// <summary>
+        /// Deleta um contato com o ID especificado.
+        /// </summary>
+        /// <param name="id">O ID do contato a ser deletado.</param>
+        /// <returns>Nenhum conteúdo.</returns>
+        /// <response code="204">O contato foi deletado com sucesso.</response>
+        /// <response code="404">O contato com o ID fornecido não foi encontrado.</response>
         [HttpDelete("{id}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(404)]
         public async Task<IActionResult> DeleteContato(int id)
         {
             var contato = await _context.Contato.FindAsync(id);
@@ -159,5 +237,7 @@ namespace ContatoWebApplication.Controllers
         {
             return _context.Contato.Any(e => e.Id == id);
         }
+
+
     }
 }

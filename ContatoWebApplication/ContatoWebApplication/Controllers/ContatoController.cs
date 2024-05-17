@@ -54,85 +54,58 @@ namespace ContatoWebApplication.Controllers
         }
 
         /// <summary>
-        /// Retorna um contato com o nome especificado.
+        /// Retorna todos os contatos cadastrados ou filtrados pelos critérios fornecidos.
         /// </summary>
-        /// <param name="id">O nome do contato a ser retornado.</param>
-        /// <returns>O contato correspondente ao nome fornecido.</returns>
-        /// <response code="200">O contato foi encontrado e retornado com sucesso.</response>
-        [HttpGet("FiltrarPorNome")]
+        /// <param name="nome">O nome do contato a ser filtrado.</param>
+        /// <param name="empresa">A empresa do contato a ser filtrado.</param>
+        /// <param name="telefonePessoal">O telefone pessoal do contato a ser filtrado.</param>
+        /// <param name="telefoneComercial">O telefone comercial do contato a ser filtrado.</param>
+        /// <param name="email">O email do contato a ser filtrado.</param>
+        /// <returns>Uma lista de contatos.</returns>
+        [HttpGet("FiltrarContato")]
         [ProducesResponseType(200)]
-        public async Task<ActionResult<IEnumerable<Contato>>> FiltrarPorNome(string nome)
+        public async Task<ActionResult<IEnumerable<Contato>>> FiltrarContatos(
+            string nome = null,
+            string empresa = null,
+            string telefonePessoal = null,
+            string telefoneComercial = null,
+            string email = null)
         {
-            return await _context.Contato
-                .Where(contato => contato.Nome.Contains(nome))
+            var query = _context.Contato.AsQueryable();
+
+            if(!string.IsNullOrWhiteSpace(nome)){
+                query = query.Where(contato => contato.Nome.Contains(nome));
+            }
+
+            if (!string.IsNullOrWhiteSpace(empresa))
+            {
+                query = query.Where(contato => contato.Empresa.Contains(empresa));
+            }
+
+            if (!string.IsNullOrWhiteSpace(telefonePessoal))
+            {
+                query = query.Where(contato => contato.TelefonePessoal.Contains(telefonePessoal));
+            }
+
+            if (!string.IsNullOrWhiteSpace(telefoneComercial))
+            {
+                query = query.Where(contato => contato.TelefoneComercial.Contains(telefoneComercial));
+            }
+
+            if (!string.IsNullOrWhiteSpace(email))
+            {
+                query = query.Where(contato => contato.ListaEmails.Any(e => e.EnderecoEmail.Contains(email)));
+            }
+
+            var contatos = await query
+                .OrderBy(contato => contato.Nome) // ordernar os contatos por nome
                 .Include(contato => contato.ListaEmails)
                 .ToListAsync();
+
+            return Ok(contatos);
         }
 
-        /// <summary>
-        /// Retorna um contato com a empresa especificada.
-        /// </summary>
-        /// <param name="id">A empresa do contato a ser retornado.</param>
-        /// <returns>O contato correspondente à empresa fornecida.</returns>
-        /// <response code="200">O contato foi encontrado e retornado com sucesso.</response>
-        [HttpGet("FiltrarPorEmpresa")]
-        [ProducesResponseType(200)]
-        public async Task<ActionResult<IEnumerable<Contato>>> FiltarPorEmpresa(string empresa)
-        {
-            return await _context.Contato
-                .Where(contato => contato.Empresa.Contains(empresa))
-                .Include(contato => contato.ListaEmails)
-                .ToListAsync();
-        }
-
-        /// <summary>
-        /// Retorna um contato com o telefone pessoal especificado.
-        /// </summary>
-        /// <param name="id">O telefone pessoal do contato a ser retornado.</param>
-        /// <returns>O contato correspondente ao telefone fornecido.</returns>
-        /// <response code="200">O contato foi encontrado e retornado com sucesso.</response>
-        [HttpGet("FiltrarPorTelefonePessoal")]
-        [ProducesResponseType(200)]
-        public async Task<ActionResult<IEnumerable<Contato>>> FiltrarPorTelefonePessoal(string telefonePessoal)
-        {
-            return await _context.Contato
-                .Where(contato => contato.TelefonePessoal.Contains(telefonePessoal))
-                .Include(contato => contato.ListaEmails)
-                .ToListAsync();
-        }
-
-        /// <summary>
-        /// Retorna um contato com o telefone comercial especificado.
-        /// </summary>
-        /// <param name="id">O telefone comercial do contato a ser retornado.</param>
-        /// <returns>O contato correspondente ao telefone fornecido.</returns>
-        /// <response code="200">O contato foi encontrado e retornado com sucesso.</response>
-        [HttpGet("FiltrarPorTelefoneComercial")]
-        [ProducesResponseType(200)]
-        public async Task<ActionResult<IEnumerable<Contato>>> FiltrarPorTelefoneComercial(string telefoneComercial)
-        {
-            return await _context.Contato
-                .Where(contato => contato.TelefoneComercial.Contains(telefoneComercial))
-                .Include(contato => contato.ListaEmails)
-                .ToListAsync();
-        }
-
-        /// <summary>
-        /// Retorna um contato com o email especificado.
-        /// </summary>
-        /// <param name="id">O email do contato a ser retornado.</param>
-        /// <returns>O contato correspondente ao email fornecido.</returns>
-        /// <response code="200">O contato foi encontrado e retornado com sucesso.</response>
-        [HttpGet("FiltrarPorEmail")]
-        [ProducesResponseType(200)]
-        public async Task<ActionResult<IEnumerable<Contato>>> FiltrarPorEmail(string email)
-        {
-            return await _context.Contato
-                .Where(contato => contato.ListaEmails.Any(e => e.EnderecoEmail == email))
-                .Include(contato => contato.ListaEmails)
-                .ToListAsync();
-        }
-
+       
         /// <summary>
         /// Adiciona um novo contato.
         /// </summary>

@@ -14,7 +14,7 @@ namespace ContatoDomain.Entity
     {
         [Key]
         public int Id { get; set; }
-        public string EnderecoEmail { get; set; }
+        public string? EnderecoEmail { get; set; }
 
         #region [Associações do Contato aos seus e-mails]
         public int ContatoId { get; set; }

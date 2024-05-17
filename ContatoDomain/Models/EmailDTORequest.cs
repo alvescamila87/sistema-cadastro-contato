@@ -8,6 +8,6 @@ namespace ContatoDomain.Models
 {
     public class EmailDTORequest
     {
-        public string EnderecoEmail { get; set; }
+        public string? EnderecoEmail { get; set; }
     }
 }

@@ -1,5 +1,6 @@
 using ContatoWebApplication.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.OpenApi.Models;
 using System.Reflection;
 
@@ -46,6 +47,15 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(
+            Path.Combine(Directory.GetCurrentDirectory(), "ContatoClientApp")),
+    RequestPath = "/ContatoClientApp"
+});
+
+
 
 app.UseRouting();
 

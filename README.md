@@ -15,7 +15,7 @@ O "Sistema de cadastro de contatos" é projeto um permite a visualização, incl
 * C#
 * ASP.NET MVC,
 * Banco de dados em memória
-* Documentação C# <summary>
+* Documentação C#
 * Swagger (annotations para geração de documentação de API)
 
 ## Documentação API

@@ -1,7 +1,7 @@
 const urlAPI = '/api/contato';
 
 /**
- * Mostra a seção especificada e oculta as outras seções.
+ * Função que permite motrar e ocultar seção especificada do HTML.
  * @param {string} sectionId - O ID da seção a ser exibida.
  */
 function showSection(sectionId) {
@@ -12,7 +12,7 @@ function showSection(sectionId) {
 }
 
 /**
- * Adiciona contato.
+ * Função para criar o cadastro de contato 
  */
 function adicionarContato() {
     const nome = document.getElementById('nome').value;
@@ -55,7 +55,7 @@ function adicionarContato() {
 }
 
 /**
- * Limpa o formulário de adicionar contato.
+ * Função para limpar o formulário de criação de contato.
  */
 function limparFormulario() {
     document.getElementById('nome').value = '';
@@ -66,13 +66,7 @@ function limparFormulario() {
 }
 
 /**
- * Função para exibir a lista de contatos.
- * @param {Array} contatos - Lista de contatos.
- */
-
-
-/**
- * Excluir o contato conforme ID fornecido.
+ * Função para excluir o contato de acordo com o ID fornecido.
  */
 function excluirContato() {
     const id = document.getElementById('idExcluir').value;
@@ -104,7 +98,7 @@ function excluirContato() {
 }
 
 /**
-* Lista todos os contatos.
+* Função para listar todos os contatos cadastrados.
 */
 function listarContatos() {
     fetch(`${urlAPI}`)
@@ -137,11 +131,13 @@ function listarContatos() {
         });
 }
 
-// Carregar a lista de contatos ao carregar a página
+/**
+ * Ccarregar a lista de contatos ao carregar a página
+ */
 document.addEventListener('DOMContentLoaded', listarContatos);
 
 /**
- * Pesquisar um contato por ID.
+ * Função para pesquisar um contato de acordo com o ID fornecido.
  */
 function pesquisarContatoPorId() {
     const id = document.getElementById('idPesquisar').value;

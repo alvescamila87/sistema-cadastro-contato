@@ -132,7 +132,7 @@ function listarContatos() {
 }
 
 /**
- * Ccarregar a lista de contatos ao carregar a página
+ * Carregar a lista de contatos ao carregar a página
  */
 document.addEventListener('DOMContentLoaded', listarContatos);
 

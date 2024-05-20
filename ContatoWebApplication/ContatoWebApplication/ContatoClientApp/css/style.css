@@ -49,6 +49,7 @@ nav a:hover {
     color: white;
     border: none;
     cursor: pointer;
+    margin-right: 5px;
 }
 .form-group button:hover {
     background-color: #45a049;
@@ -82,3 +83,69 @@ footer {
 footer p {
         margin: 0; 
 }
+
+button.open-modal {
+    padding: 5px 10px;
+    cursor: pointer;
+}
+ 
+/*
+    Modal listagem contatos
+*/
+.modal-listagem-contatos {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.4);
+    padding-top: 60px;
+}
+
+.modal-listagem-contatos-content {
+    background-color: #fefefe;
+    margin: 5% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+}
+
+.close-button {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close-button:hover, .close-button:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+}
+
+/* Estilos para as informações básicas do contato */
+.info-basica {
+    background-color: #f9f9f9;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+/* Estilos para a lista de e-mails */
+.lista-emails {
+    list-style-type: none;
+    padding: 0;
+}
+
+.lista-emails li {
+    background-color: #fff;
+    padding: 10px;
+    margin-bottom: 8px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}  

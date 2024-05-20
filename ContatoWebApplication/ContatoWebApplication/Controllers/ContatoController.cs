@@ -117,9 +117,9 @@ namespace ContatoWebApplication.Controllers
         public async Task<ActionResult<Contato>> PostContato(ContatoDTORequest contatoRequest)
         {
 
-            var novoContato = new Contato(contatoRequest.Nome)
+            var novoContato = new Contato()
             {
-                //Nome = contatoRequest.Nome,
+                Nome = contatoRequest.Nome,
                 Empresa = contatoRequest.Empresa,
                 TelefonePessoal = contatoRequest.TelefonePessoal,
                 TelefoneComercial = contatoRequest.TelefoneComercial,

@@ -68,32 +68,30 @@ function limparFormulario() {
 /**
  * Função para excluir o contato de acordo com o ID fornecido.
  */
-function excluirContato() {
-    const id = document.getElementById('idExcluir').value;
-
-    if (!id) {
-        alert("Por favor, insira o ID do contato a ser excluído.");
-        return;
-    }
-
+function excluirContato(idContato) {
     if (confirm("Você tem certeza que deseja excluir este contato?")) {
-        fetch(`${urlAPI}/${id}`, {
+        fetch(`${urlAPI}/${idContato}`, {
             method: 'DELETE'
         })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Erro ao excluir contato');
+        .then(response => {
+            if (!response.ok) {
+                if (response.status === 404) {
+                    throw new Error('Contato não encontrado');
+                } else {
+                    throw new Error('Erro ao excluir o contato');
                 }
-                return response.json();
-            })
-            .then(data => {
-                alert("Contato excluído com sucesso!");
-                listarContatos(); // Atualiza a lista de contatos após a exclusão
-            })
-            .catch(error => {
-                console.error('Erro:', error);
-                alert('Erro ao excluir contato');
-            });
+            }
+            return response.text();
+        })
+        .then(() => {
+            alert("Contato excluído com sucesso");
+            document.getElementById("modal-listagem-contatos").style.display = 'none';
+            listarContatos(); // Recarregar a lista de contatos após a exclusão
+        })
+        .catch(error => {
+            console.error('Erro:', error);
+            alert(error.message);
+        });
     }
 }
 
@@ -121,6 +119,9 @@ function listarContatos() {
                 <td>${contato.listaEmails[0].enderecoEmail}</td>
                 <td>${contato.telefonePessoal}</td>
                 <td>${contato.telefoneComercial}</td>
+                <td>
+                    <button onclick="verMais(${contato.id})">Ver mais</button>
+                </td>
             `;
                 listaContatos.appendChild(row);
             });
@@ -174,3 +175,83 @@ function pesquisarContatoPorId() {
             resultadoPesquisaId.innerHTML = ''; // Limpa o resultado anterior, se houver
         });
 }
+
+/**
+* Função para visualizar mais detalhes do contato
+*/
+function verMais(id) {
+    document.getElementById("modal-listagem-contatos").style.display = 'block';
+
+    fetch(`${urlAPI}/${id}`, {
+        method: 'GET'
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Contato não encontrado');
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log(data);
+
+            const detalhesContato = document.querySelector('.modal-listagem-contatos-content');
+            detalhesContato.innerHTML = '';
+
+            /// Cria o botão de fechar a modal
+            const closeButton = document.createElement('span');
+            closeButton.className = 'close-button';
+            closeButton.innerHTML = '&times;';
+            closeButton.onclick = () => {
+                document.getElementById("modal-listagem-contatos").style.display = 'none';
+            };
+            detalhesContato.appendChild(closeButton);
+
+            // Cria um container para as informações básicas do contato
+            const tituloInfo = document.createElement('h2');
+            tituloInfo.textContent = 'Informações do contato:';
+            detalhesContato.appendChild(tituloInfo);
+
+            const infoBasica = document.createElement('div');
+            infoBasica.className = 'info-basica';
+            infoBasica.innerHTML = `
+                <p>ID: ${data.id}</p>
+                <p>Nome: ${data.nome}</p>
+                <p>Empresa: ${data.empresa}</p>
+                <p>Telefone Pessoal: ${data.telefonePessoal}</p>
+                <p>Telefone Comercial: ${data.telefoneComercial}</p>
+            `;
+
+            detalhesContato.appendChild(infoBasica);
+
+            // Cria uma lista para os e-mails
+            const tituloEmails = document.createElement('h2');
+            tituloEmails.textContent = 'E-mails do contato:';
+            detalhesContato.appendChild(tituloEmails);
+            
+            const listaEmails = document.createElement('ul');
+            listaEmails.className = 'lista-emails';
+            
+            data.listaEmails.forEach(email => {
+                const emailItem = document.createElement('li');
+                emailItem.textContent = email.enderecoEmail;
+                listaEmails.appendChild(emailItem);
+            });
+
+            detalhesContato.appendChild(listaEmails);
+
+            // Adiciona botões de ação na lista de contato
+            const botoesAcao = document.createElement('div');
+            botoesAcao.innerHTML = `
+                <button onclick="editarContato(${data.id})">Editar</button>
+                <button onclick="excluirContato(${data.id})">Excluir</button>
+            `;
+
+            // Adiciona os botões de ação ao modal
+            detalhesContato.appendChild(botoesAcao);
+
+        })
+        .catch(error => {
+            console.error('Erro:', error);
+        });
+}
+

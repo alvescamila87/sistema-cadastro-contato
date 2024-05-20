@@ -26,9 +26,8 @@ namespace ContatoDomain.Entity
         /// Construtor para criação de contato
         /// </summary>
         /// <param name="nome">Nome é o único campo obrigatório para criação do contato</param>
-        public Contato(string nome)
-        {
-            Nome = nome;            
+        public Contato()
+        {          
             ListaEmails = new List<Email>();
         }
 

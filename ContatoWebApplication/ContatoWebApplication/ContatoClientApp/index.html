@@ -14,7 +14,6 @@
     </header>
     <nav>
         <a href="#listar" onclick="showSection('listar')">Listar contatos</a>
-        <a href="#pesquisar_id" onclick="showSection('pesquisar_id')">Pesquisar por ID</a>
         <a href="#adicionar" onclick="showSection('adicionar')">Adicionar contato</a>
     </nav>
     <div class="container">
@@ -44,7 +43,7 @@
             </div>
             <div class="form-group">
                 <button type="button" onclick="adicionarContato()">Adicionar</button>
-                <button type="button" onclick="limparFormulario()">Limpar</button>
+                <button id="botao-limpar-adicionar-contato" type="button" onclick="limparFormulario()" >Limpar</button>
             </div>
         </section>
 
@@ -60,21 +59,26 @@
             </div>
         </section>
 
-        <!-- Seção para listar contatos cadastrados -->
+        <!-- Seção para listar e pesquisar contatos -->
         <section id="listar" class="section">
+            <h3>Pesquisar contato por ID: </h3>
+
+            <!-- Seção para pesquisar contato por ID -->
+            <div class="form-group">
+                <input type="text" id="idPesquisar" name="idPesquisar" placeholder="Digite o ID do contato">
+                <button type="button" onclick="pesquisarContatoPorId()">Pesquisar</button>
+            </div>
 
             <!-- Seção para filtrar contatos -->
             <div class="form-group">
-                <h2>Filtrar contato por:</h2>
+                <h3>Filtrar contato por:</h3>
                 <input type="text" id="filtroNome" placeholder="Nome do contato">
                 <input type="text" id="filtroEmpresa" placeholder="Empresa">
                 <input type="text" id="filtroTelefonePessoal" placeholder="Telefone Pessoal">
                 <input type="text" id="filtroTelefoneComercial" placeholder="Telefone Comercial">
                 <input type="text" id="filtroEmail" placeholder="E-mail">
-            </div>
-            <div class="form-group">
                 <button onclick="filtrarContatos()">Filtrar</button>
-                <button onclick="limparFiltros()">Limpar filtros</button>
+                <button id="botao-limpar-filtrar-contato" onclick="limparFiltros()">Limpar filtros</button>
             </div>
 
             <!-- Tabela de contatos -->
@@ -136,35 +140,7 @@
                 </div>
             </div>
         </section>
-
-        <!-- Seção para pesquisar contato por ID -->
-        <section id="pesquisar_id" class="section">
-            <h2>Pesquisar contato por ID</h2>
-            <div class="form-group">
-                <label for="idPesquisar">ID do Contato:</label>
-                <input type="text" id="idPesquisar" name="idPesquisar" placeholder="Digite o ID do contato">
-            </div>
-            <div class="form-group">
-                <button type="button" onclick="pesquisarContatoPorId()">Pesquisar</button>
-            </div>
-            <div class="form-group">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>ID</th>
-                            <th>Nome</th>
-                            <th>Empresa</th>
-                            <th>Email</th>
-                            <th>Telefone Pessoal</th>
-                            <th>Telefone Comercial</th>
-                        </tr>
-                    </thead>
-                    <tbody id="resultadoPesquisaId">
-                        <!-- Resultado da pesquisa será exibido aqui -->
-                    </tbody>
-                </table>
-            </div>
-        </section>
+        
     </div>
     <footer>
         <p>Designed by Camila Alves - 2024 &copy; Todos os direitos reservados.</p>

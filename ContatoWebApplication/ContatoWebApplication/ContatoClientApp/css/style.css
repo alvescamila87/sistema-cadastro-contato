@@ -188,3 +188,42 @@ button.open-modal {
     text-decoration: none;
     cursor: pointer;
 }
+
+/* Customização Botão limpar */
+#botao-limpar-adicionar-contato, #botao-limpar-filtrar-contato {
+    background-color: #b0b0b0;
+    color: white;
+    border: none;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+#botao-limpar-adicionar:hover, #botao-limpar-filtrar-contato:hover {
+    background-color: #dbdbdb; 
+}
+
+/* Customização Botão excluir contato */
+#botao-limpar-excluir-contato {
+    background-color: #ff0000;
+    color: white;
+    border: none;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+#botao-limpar-excluir-contato:hover {
+    background-color: #cc0000; 
+}
+
+/* Customização Botão editar contato */
+#botao-limpar-editar-contato {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+#botao-limpar-editar-contato:hover {
+    background-color: #0056b3; 
+}

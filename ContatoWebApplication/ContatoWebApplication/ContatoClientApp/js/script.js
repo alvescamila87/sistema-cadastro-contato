@@ -156,7 +156,7 @@ function pesquisarContatoPorId() {
             return response.json();
         })
         .then(data => {
-            const resultadoPesquisaId = document.getElementById('resultadoPesquisaId');
+            const resultadoPesquisaId = document.getElementById('listaContatos');
             resultadoPesquisaId.innerHTML = `            
                 <tr>
                     <td>${data.id}</td>
@@ -174,7 +174,7 @@ function pesquisarContatoPorId() {
         .catch(error => {
             console.error('Erro:', error);
             alert('Erro ao pesquisar contato');
-            const resultadoPesquisaId = document.getElementById('resultadoPesquisaId');
+            const resultadoPesquisaId = document.getElementById('listaContatos');
             resultadoPesquisaId.innerHTML = ''; // Limpa o resultado anterior, se houver
         });
 }
@@ -245,8 +245,8 @@ function verMais(id) {
             // Adiciona botões de ação na lista de contato
             const botoesAcao = document.createElement('div');
             botoesAcao.innerHTML = `
-                <button onclick="editarContato(${data.id})">Editar</button>
-                <button onclick="excluirContato(${data.id})">Excluir</button>
+                <button id="botao-limpar-editar-contato" onclick="editarContato(${data.id})">Editar</button>
+                <button id="botao-limpar-excluir-contato" onclick="excluirContato(${data.id})">Excluir</button>
             `;
 
             // Adiciona os botões de ação ao modal
@@ -336,7 +336,13 @@ function editarContato(id) {
         if (!response.ok) {
             throw new Error('Contato não encontrado');
         }
-        return response.json();
+        // Verifica se a resposta contém dados
+        const contentType = response.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+            return response.json();
+        } else {
+            throw new Error('Resposta não contém dados JSON');
+        }
     })
     .then(data => {
         document.getElementById('editarNome').value = data.nome;
@@ -391,7 +397,13 @@ function salvarEdicaoContato() {
         if (!response.ok) {
             throw new Error('Erro ao atualizar o contato');
         }
-        return response.json();
+        // Verifica se a resposta contém dados
+        const contentType = response.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+            return response.json();
+        } else {
+            throw new Error('Resposta não contém dados JSON');
+        }
     })
     .then(() => {
         alert('Contato atualizado com sucesso!');

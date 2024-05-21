@@ -211,7 +211,7 @@ function verMais(id) {
 
             // Cria um container para as informações básicas do contato
             const tituloInfo = document.createElement('h2');
-            tituloInfo.textContent = 'Informações do contato:';
+            tituloInfo.textContent = 'Dados do contato:';
             detalhesContato.appendChild(tituloInfo);
 
             const infoBasica = document.createElement('div');
@@ -228,7 +228,7 @@ function verMais(id) {
 
             // Cria uma lista para os e-mails
             const tituloEmails = document.createElement('h2');
-            tituloEmails.textContent = 'E-mails do contato:';
+            tituloEmails.textContent = 'Lista de e-mails:';
             detalhesContato.appendChild(tituloEmails);
             
             const listaEmails = document.createElement('ul');
@@ -335,24 +335,25 @@ function editarContato(id) {
     .then(response => {
         if (!response.ok) {
             throw new Error('Contato não encontrado');
-        }
+        }   
         // Verifica se a resposta contém dados
         const contentType = response.headers.get('content-type');
         if (contentType && contentType.includes('application/json')) {
             return response.json();
         } else {
             throw new Error('Resposta não contém dados JSON');
-        }
+        }     
     })
     .then(data => {
         document.getElementById('editarNome').value = data.nome;
         document.getElementById('editarEmpresa').value = data.empresa;
-        document.getElementById('editarEmail').value = data.listaEmails[0].enderecoEmail; // Assumindo que o primeiro email é o principal
+        document.getElementById('editarEmail').value = data.listaEmails[0].enderecoEmail; 
         document.getElementById('editarTelefonePessoal').value = data.telefonePessoal;
         document.getElementById('editarTelefoneComercial').value = data.telefoneComercial;
 
-        // Armazena o ID do contato na modal para uso posterior
+        // Armazena o ID do contato e do E-mail na modal para uso posterior
         document.getElementById('modal-editar-contato').dataset.id = id;
+        document.getElementById('modal-editar-contato').dataset.idEmail = data.listaEmails[0].id; 
     })
     .catch(error => {
         console.error('Erro:', error);
@@ -371,11 +372,17 @@ function fecharModalEditar() {
  */
 function salvarEdicaoContato() {
     const id = document.getElementById('modal-editar-contato').dataset.id;
+    const idEmail = document.getElementById('modal-editar-contato').dataset.idEmail;
     const nome = document.getElementById('editarNome').value;
     const empresa = document.getElementById('editarEmpresa').value;
     const email = document.getElementById('editarEmail').value;
     const telefonePessoal = document.getElementById('editarTelefonePessoal').value;
     const telefoneComercial = document.getElementById('editarTelefoneComercial').value;
+
+    if (!email) {
+        alert('Favor inserir um email válido.');
+        return;
+    }
 
     const contatoAtualizado = {
         id: id,
@@ -383,7 +390,7 @@ function salvarEdicaoContato() {
         empresa: empresa,
         telefonePessoal: telefonePessoal,
         telefoneComercial: telefoneComercial,
-        listaEmails: [{ enderecoEmail: email }]
+        listaEmails: [{ id: idEmail, enderecoEmail: email }]
     };
 
     fetch(`${urlAPI}/${id}`, {
@@ -396,14 +403,14 @@ function salvarEdicaoContato() {
     .then(response => {
         if (!response.ok) {
             throw new Error('Erro ao atualizar o contato');
-        }
+        }  
         // Verifica se a resposta contém dados
         const contentType = response.headers.get('content-type');
         if (contentType && contentType.includes('application/json')) {
             return response.json();
         } else {
             throw new Error('Resposta não contém dados JSON');
-        }
+        }      
     })
     .then(() => {
         alert('Contato atualizado com sucesso!');

@@ -203,7 +203,7 @@ button.open-modal {
 }
 
 /* Customização Botão excluir contato */
-#botao-limpar-excluir-contato {
+#botao-limpar-excluir-contato, #botao-remover-campo-e-mail {
     background-color: #ff0000;
     color: white;
     border: none;
@@ -211,7 +211,7 @@ button.open-modal {
     margin-top: 10px;
 }
 
-#botao-limpar-excluir-contato:hover {
+#botao-limpar-excluir-contato:hover, #botao-remover-campo-e-mail:hover {
     background-color: #cc0000; 
 }
 

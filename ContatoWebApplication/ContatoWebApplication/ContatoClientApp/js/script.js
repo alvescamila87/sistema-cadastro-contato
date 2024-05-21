@@ -19,14 +19,24 @@ function adicionarContato() {
     const empresa = document.getElementById('empresa').value;
     const telefonePessoal = document.getElementById('telefonePessoal').value;
     const telefoneComercial = document.getElementById('telefoneComercial').value;
-    const email = document.getElementById('email').value;
+
+    // Obtem todos os campos de entrada de email
+    const emailInputs = document.querySelectorAll('.emailInput');
+    const listaEmails = [];
+
+    // Itere sobre os campos de entrada de email e adicione-os à lista de emails
+    emailInputs.forEach(input => {
+        if (input.value.trim() !== '') {
+            listaEmails.push({ enderecoEmail: input.value });
+        }
+    });
 
     const novoContato = {
         nome: nome,
         empresa: empresa,
         telefonePessoal: telefonePessoal,
         telefoneComercial: telefoneComercial,
-        listaEmails: [{ enderecoEmail: email }]
+        listaEmails: listaEmails
     };
 
     fetch(`${urlAPI}`, {
@@ -62,7 +72,12 @@ function limparFormulario() {
     document.getElementById('empresa').value = '';
     document.getElementById('telefonePessoal').value = '';
     document.getElementById('telefoneComercial').value = '';
-    document.getElementById('email').value = '';
+
+    // Limpa os campos de email
+    const emailInputs = document.querySelectorAll('.emailInput');
+    emailInputs.forEach(input => {
+        input.value = '';
+    });
 }
 
 /**
@@ -421,4 +436,25 @@ function salvarEdicaoContato() {
         console.error('Erro:', error);
         alert('Erro ao atualizar o contato.');
     });
+}
+
+/**
+ * Função para adicionar N campos de e-mail ao formulário de adicionar contato
+ */
+function adicionarCampoEmail() {
+    const divEmails = document.getElementById('divEmails');
+    const novoCampoEmail = document.createElement('div');
+    novoCampoEmail.innerHTML = `
+        <input id="botao-adicionar-campo-e-mail" type="email" class="emailInput" name="email" placeholder="nome@email.com">
+        <button id="botao-remover-campo-e-mail"type="button" onclick="removerCampoEmail(this)">Remover campo de e-mail</button>
+    `;
+    divEmails.appendChild(novoCampoEmail);
+}
+
+/**
+ * Função para remover N campos de e-mails do formulário de adicionar contato
+ */
+function removerCampoEmail(botaoRemover) {
+    const campoEmail = botaoRemover.parentNode;
+    campoEmail.parentNode.removeChild(campoEmail);
 }

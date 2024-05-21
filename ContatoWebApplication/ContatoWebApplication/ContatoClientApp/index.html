@@ -30,10 +30,6 @@
                 <input type="text" id="empresa" name="empresa" placeholder="Digite a empresa do contato">
             </div>
             <div class="form-group">
-                <label for="email">Email:</label>
-                <input type="email" id="email" name="email" placeholder="nome@email.com">
-            </div>
-            <div class="form-group">
                 <label for="telefonePessoal">Telefone Pessoal:</label>
                 <input type="text" id="telefonePessoal" name="telefonePessoal" placeholder="(00)-00000-0000">
             </div>
@@ -41,8 +37,13 @@
                 <label for="telefoneComercial">Telefone Comercial:</label>
                 <input type="text" id="telefoneComercial" name="telefoneComercial" placeholder="(00)-00000-0000">
             </div>
+            <div class="form-group" id="divEmails">
+                <label for="email">Email:</label>
+                <input type="email" class="emailInput" name="email" placeholder="nome@email.com">
+                <button type="button" onclick="adicionarCampoEmail()">Adicionar campo de e-mail</button>
+            </div>
             <div class="form-group">
-                <button type="button" onclick="adicionarContato()">Adicionar</button>
+                <button type="button" onclick="adicionarContato()">Salvar contato</button>
                 <button id="botao-limpar-adicionar-contato" type="button" onclick="limparFormulario()" >Limpar</button>
             </div>
         </section>

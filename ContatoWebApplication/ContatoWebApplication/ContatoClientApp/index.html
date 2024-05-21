@@ -1,11 +1,13 @@
 ﻿<!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="css/style.css">
     <title>Contatos</title>
 </head>
+
 <body>
     <header>
         <h1>Sistema de Cadastro de Contatos</h1>
@@ -45,7 +47,7 @@
                 <button type="button" onclick="limparFormulario()">Limpar</button>
             </div>
         </section>
-        
+
         <!-- Seção para excluir contato por ID -->
         <section id="excluir" class="section">
             <h2>Excluir Contato</h2>
@@ -60,35 +62,80 @@
 
         <!-- Seção para listar contatos cadastrados -->
         <section id="listar" class="section">
-            <h2>Listar contatos cadastrados</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Nome</th>
-                        <th>Empresa</th>
-                        <th>Email</th>
-                        <th>Telefone Pessoal</th>
-                        <th>Telefone Comercial</th>
-                        <th>Ações</th>
-                    </tr>
-                </thead>
-                <tbody id="listaContatos">
-                    <!-- Contatos serão listados aqui -->
-                </tbody>
-            </table>
+
+            <!-- Seção para filtrar contatos -->
+            <div class="form-group">
+                <h2>Filtrar contato por:</h2>
+                <input type="text" id="filtroNome" placeholder="Nome do contato">
+                <input type="text" id="filtroEmpresa" placeholder="Empresa">
+                <input type="text" id="filtroTelefonePessoal" placeholder="Telefone Pessoal">
+                <input type="text" id="filtroTelefoneComercial" placeholder="Telefone Comercial">
+                <input type="text" id="filtroEmail" placeholder="E-mail">
+            </div>
+            <div class="form-group">
+                <button onclick="filtrarContatos()">Filtrar</button>
+                <button onclick="limparFiltros()">Limpar filtros</button>
+            </div>
+
+            <!-- Tabela de contatos -->
+            <div class="form-group">
+                <h2>Lista de contatos cadastrados</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nome</th>
+                            <th>Empresa</th>
+                            <th>Email</th>
+                            <th>Telefone Pessoal</th>
+                            <th>Telefone Comercial</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="listaContatos">
+                        <!-- Contatos serão listados aqui -->
+                    </tbody>
+                </table>
+            </div>
         </section>
 
         <!-- Gera uma modal que lista os N e-mails do contato-->
         <div id="modal-listagem-contatos" class="modal-listagem-contatos">
             <div class="modal-listagem-contatos-content">
-                <span class="close-button">&times;</span>                               
+                <span class="close-button">&times;</span>
             </div>
         </div>
 
-
-        <!-- Seção para filtrar contato -->
-        <!-- TODO: -->
+        <!-- Seção para modal editar contato -->
+        <section id="modal-editar-contato" class="modal-editar-contato">
+            <div class="modal-editar-contato-content">
+                <span class="close-button" onclick="fecharModalEditar()">&times;</span>
+                <h2>Editar Contato</h2>
+                <div class="form-group">
+                    <label for="editarNome">Nome:</label>
+                    <input type="text" id="editarNome" name="nome">
+                </div>
+                <div class="form-group">
+                    <label for="editarEmpresa">Empresa:</label>
+                    <input type="text" id="editarEmpresa" name="empresa">
+                </div>
+                <div class="form-group">
+                    <label for="editarEmail">Email:</label>
+                    <input type="email" id="editarEmail" name="email">
+                </div>
+                <div class="form-group">
+                    <label for="editarTelefonePessoal">Telefone Pessoal:</label>
+                    <input type="text" id="editarTelefonePessoal" name="telefonePessoal">
+                </div>
+                <div class="form-group">
+                    <label for="editarTelefoneComercial">Telefone Comercial:</label>
+                    <input type="text" id="editarTelefoneComercial" name="telefoneComercial">
+                </div>
+                <div class="form-group">
+                    <button type="button" onclick="salvarEdicaoContato()">Salvar</button>
+                </div>
+            </div>
+        </section>
 
         <!-- Seção para pesquisar contato por ID -->
         <section id="pesquisar_id" class="section">
@@ -124,4 +171,5 @@
     </footer>
 </body>
 <script src="js/script.js"></script>
+
 </html>

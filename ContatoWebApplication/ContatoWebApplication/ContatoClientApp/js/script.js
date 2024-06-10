@@ -117,13 +117,23 @@ function listarContatos() {
     fetch(`${urlAPI}`)
         .then(response => {
             if (!response.ok) {
-                throw new Error('Erro ao listar contatos');
+                if (response.status === 404) {
+                    // Se o status for 404, significa que não há contatos
+                    return [];
+                } else {
+                    throw new Error('Erro ao listar contatos');
+                }
             }
             return response.json();
         })
         .then(data => {
             const listaContatos = document.getElementById('listaContatos');
             listaContatos.innerHTML = '';
+
+            if (data.length === 0) {
+                listaContatos.innerHTML = '<tr><td colspan="7">Nenhum contato cadastrado.</td></tr>';
+                return;
+            }
 
             data.forEach(contato => {
                 const row = document.createElement('tr');
